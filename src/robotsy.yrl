@@ -6,7 +6,7 @@ Rootsymbol begin.
 begin -> bot_rules : '$1'.
 
 bot_rules -> bot_rule : {bot_rules, ['$1']}.
-bot_rules -> bot_rules bot_rule : {bot_rules, X} = '$1', {bot_rules, ['$2'|X]}. %% There's no need to put it in the proper order.
+bot_rules -> bot_rules bot_rule : {bot_rules, X} = '$1', {bot_rules, X ++ ['$2']}. 
 
 bot_rule -> bot_name allowed_disalloweds : {bot_rule, '$1', '$2'}.
 
