@@ -6,8 +6,7 @@
 
 parse_robots(Str) when is_list(Str) -> 
 	{ok, Tokens, _} = robotsx:string(Str),
-	{ok, Parsed} = robotsy:parse(Tokens),
-	Parsed.
+	robotsy:parse(Tokens).
 
 can_access(Parsed, BotName, Url) when is_list(Url) and is_list(BotName) and is_tuple(Parsed) ->
 	{bot_rules, X} = Parsed,
@@ -28,22 +27,35 @@ can_access_intern([Head|Tail], BotName, Url) when is_list(Url) and is_list(BotNa
 
 	end.
 
-ck_allowed_disalloweds(_, []) -> true ;
+ck_allowed_disalloweds(_, []) -> {true, 0} ;
 ck_allowed_disalloweds(Url, [{allowed_disallowed, {'disallow', Url2}} | Tail]) when is_list(Url) and is_list(Url2) ->
 	UrlStart = string:substr(Url, 1, length(Url2)),
 	if
 		UrlStart =:= Url2 ->
-			false ;
+			{false, 0} ;
 
 		true ->
 			ck_allowed_disalloweds(Url, Tail)
 	end;
 
+ck_allowed_disalloweds(Url, [{allowed_disallowed, {'allow', Url2}}, {allowed_disallowed, {'crawldelay', CD}} | Tail]) when is_list(Url) and is_list(Url2) ->
+	UrlStart = string:substr(Url, 1, length(Url2)),
+	if
+		UrlStart =:= Url2 ->
+			{true, CD};
+
+		true ->
+			ck_allowed_disalloweds(Url, Tail)
+	end;
+
+ck_allowed_disalloweds(Url, [{allowed_disallowed, {'crawldelay', _}} | Tail]) when is_list(Url) ->
+	ck_allowed_disalloweds(Url, Tail); 
+
 ck_allowed_disalloweds(Url, [{allowed_disallowed, {'allow', Url2}} | Tail]) when is_list(Url) and is_list(Url2) ->
 	UrlStart = string:substr(Url, 1, length(Url2)),
 	if
 		UrlStart =:= Url2 ->
-			true;
+			{true, 0};
 
 		true ->
 			ck_allowed_disalloweds(Url, Tail)

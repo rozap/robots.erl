@@ -1,5 +1,5 @@
 Nonterminals bot_rule begin bot_name allowed_disallowed allowed_disalloweds bot_rules.
-Terminals useragent ':' identifier allow disallow url.
+Terminals useragent ':' identifier allow disallow url crawldelay integer.
 
 Rootsymbol begin.
 
@@ -16,6 +16,7 @@ allowed_disalloweds -> allowed_disallowed : {allowed_disalloweds, ['$1']}.
 allowed_disalloweds -> allowed_disalloweds allowed_disallowed : {allowed_disalloweds, X} = '$1', {allowed_disalloweds, X ++ ['$2']}.
 
 allowed_disallowed -> allow ':' url : {'url', _, Chars} = '$3', {allowed_disallowed, {'allow', Chars}}.
+allowed_disallowed -> crawldelay ':' integer : {'integer', _, Num} = '$3', {allowed_disallowed, {'crawldelay', Num}}.
 allowed_disallowed -> disallow ':' url : {'url', _, Chars} = '$3', {allowed_disallowed, {'disallow', Chars}}.
 allowed_disallowed -> disallow ':' : {allowed_disallowed, {'allow', "/"}}.
 
