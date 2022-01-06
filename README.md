@@ -1,7 +1,7 @@
 robots.erl
 =====
 
-An OTP library
+An OTP library for parsing robots.txt files.
 
 Build
 -----
