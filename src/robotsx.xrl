@@ -4,6 +4,7 @@ Rules.
 
 Allow	: {token, {'allow', TokenLine}}.
 User-agent	: {token, {'useragent', TokenLine}}.
+User-Agent	: {token, {'useragent', TokenLine}}.
 Disallow	: {token, {'disallow', TokenLine}}.
 Crawl-delay	: {token, {'crawldelay', TokenLine}}.
 \:\s?	: {token, {':', TokenLine}}.
